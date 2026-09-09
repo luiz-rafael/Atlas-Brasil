@@ -1,0 +1,17 @@
+# Nunca enviar lake/KB no deploy CLI da raiz
+data/
+logs/
+.cursor/
+.agents/
+.neon/
+**/.venv/
+**/venv/
+**/__pycache__/
+**/.pytest_cache/
+**/node_modules/
+web/node_modules/
+web/.next/
+**/*.parquet
+**/*.zip
+**/*.sqlite
+**/*.sqlite3

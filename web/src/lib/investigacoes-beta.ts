@@ -31,17 +31,44 @@ export {
 } from "@/lib/investigacoes-beta-model";
 
 const CANDIDATES = [
-  path.join(process.cwd(), "..", "data", "mocks", "investigacoes_beta_lava_jato.json"),
   path.join(process.cwd(), "data", "mocks", "investigacoes_beta_lava_jato.json"),
+  path.join(process.cwd(), "..", "data", "mocks", "investigacoes_beta_lava_jato.json"),
 ];
 
 const FOTO_CANDIDATES = [
-  path.join(process.cwd(), "..", "data", "mocks", "investigacoes_beta_fotos.json"),
   path.join(process.cwd(), "data", "mocks", "investigacoes_beta_fotos.json"),
+  path.join(process.cwd(), "..", "data", "mocks", "investigacoes_beta_fotos.json"),
 ];
 
 let cache: InvestigacoesBetaMock | null = null;
 let fotoCache: Record<string, string> | null = null;
+
+function emptyInvestigacoesBeta(): InvestigacoesBetaMock {
+  return {
+    meta: {
+      title: "Investigações BETA indisponível neste deploy",
+      disclaimer: "Mock local ausente — página em modo vazio.",
+      version: "0",
+      kind: "DEMO_MOCK",
+    },
+    operation: { id: "none", name: "—", started_at: "" },
+    organizations: [],
+    parties: [],
+    people: [],
+    companies: [],
+    courts: [],
+    sources: [],
+    case_company_links: [],
+    cases: [],
+    case_events: [],
+    participations: [],
+    decisions: [],
+    reporters: [],
+    dual_rails: [],
+    anti_patterns: [],
+    institutions_roles: [],
+  };
+}
 
 export function loadInvestigacoesBeta(): InvestigacoesBetaMock {
   if (cache) return cache;
@@ -51,7 +78,8 @@ export function loadInvestigacoesBeta(): InvestigacoesBetaMock {
       return cache;
     }
   }
-  throw new Error("Mock investigacoes_beta_lava_jato.json não encontrado");
+  cache = emptyInvestigacoesBeta();
+  return cache;
 }
 
 /** Fotos oficiais (KB) para nós pessoa do mock BETA. */

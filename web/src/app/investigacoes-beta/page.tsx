@@ -15,6 +15,8 @@ import {
   personName,
 } from "@/lib/investigacoes-beta";
 
+export const dynamic = "force-dynamic";
+
 const REL_LABEL: Record<string, string> = {
   mentioned_in_context: "Citado no contexto",
   contrato_contexto: "Contratos no contexto",
@@ -35,6 +37,17 @@ export default function InvestigacoesBetaPage({
   searchParams?: { caso?: string; pessoa?: string };
 }) {
   const data = loadInvestigacoesBeta();
+  if (!data.cases.length) {
+    return (
+      <div className="page stack">
+        <h1>Investigações</h1>
+        <p className="muted">
+          Mock de demonstração indisponível neste ambiente. O restante do Atlas
+          (pessoas, indicadores) usa a API.
+        </p>
+      </div>
+    );
+  }
   const caseId = searchParams?.caso || "stf_inq_4325";
   const selected = data.cases.find((c) => c.id === caseId) || data.cases[0];
   const parts = participationsForCase(data, selected.id);
