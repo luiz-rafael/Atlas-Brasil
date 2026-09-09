@@ -13,6 +13,7 @@ credentials*
 # --- Documentação markdown (repo público = só código) ---
 *.md
 *.MD
+!README.md
 
 # scripts temporários de auditoria local
 _audit_tmp.py
