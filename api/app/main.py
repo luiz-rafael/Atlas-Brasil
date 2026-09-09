@@ -43,6 +43,9 @@ from app.metrics import MetricsMiddleware, metrics_response, refresh_kb_gauges, 
 async def lifespan(_app: FastAPI):
     kb = load_kb()
     refresh_kb_gauges(kb)
+    if (kb.get("meta") or {}).get("_empty"):
+        # Demo/cloud sem arquivo KB — endpoints /v1/* de serving usam Postgres.
+        pass
     yield
 
 
@@ -140,6 +143,7 @@ def health() -> dict[str, Any]:
         "superficie": "web",
         "mobile": "adiado",
         "kb": kb.get("meta", {}).get("versao"),
+        "kb_empty": bool((kb.get("meta") or {}).get("_empty")),
         "postgres": pg,
         "redis": bool(redis_ok),
         "opensearch": os_ok,

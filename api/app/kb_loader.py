@@ -44,7 +44,20 @@ def load_kb() -> dict[str, Any]:
             data = json.loads(path.read_text(encoding="utf-8"))
             data.setdefault("meta", {})["_loaded_from"] = str(path)
             return data
-    raise FileNotFoundError("Nenhuma KB encontrada (gold/active/v2)")
+    # Cloud/demo: KB JSON não vai no git (centenas de MB). Serving usa Postgres.
+    return {
+        "meta": {
+            "versao": "empty",
+            "_loaded_from": None,
+            "_empty": True,
+            "nota": "KB ausente — API em modo serving (Postgres). Defina KB_PATH ou monte data/.",
+        },
+        "entidades": [],
+        "relacoes": [],
+        "fontes": [],
+        "eventos": [],
+        "observacoes": [],
+    }
 
 
 def clear_kb_cache() -> None:
