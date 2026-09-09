@@ -1,0 +1,1335 @@
+version: 1
+meta:
+  produto: ATLAS BRASIL
+  nota: Skip por hash via pipelines/ops/check_source_update.py
+datasets:
+- id: camara_api
+  source_id: camara_deputados
+  dag_id: dag_camara_api
+  domain: politico
+  schedule: 30 2 * * *
+  probe:
+    kind: http_get_hash
+    url: https://dadosabertos.camara.leg.br/api/v2/deputados?ordem=ASC&ordenarPor=nome&itens=100
+  ingest: pipelines/ingest/camara_api.py
+  tags:
+  - politico
+  - camara
+- id: senado_api
+  source_id: senado_senadores
+  dag_id: dag_senado_api
+  domain: politico
+  schedule: 45 2 * * *
+  probe:
+    kind: http_get_hash
+    url: https://legis.senado.leg.br/dadosabertos/senador/lista/atual
+  ingest: pipelines/ingest/senado_api.py
+  tags:
+  - politico
+  - senado
+- id: tse_bulk
+  source_id: tse_ckan
+  dag_id: dag_tse_bulk
+  domain: politico
+  schedule: 0 3 * * 1
+  probe:
+    kind: ckan_package
+    url: https://dadosabertos.tse.jus.br/api/3/action/package_show?id=candidatos-2024
+  ingest: pipelines/ingest/tse_bulk.py
+  tags:
+  - politico
+  - tse
+- id: tse_bens
+  source_id: tse_bens
+  dag_id: dag_tse_bens
+  domain: politico
+  schedule: 15 3 * * 1
+  probe:
+    kind: ckan_package
+    url: https://dadosabertos.tse.jus.br/api/3/action/package_show?id=bem-candidato-2024
+  ingest: pipelines/ingest/tse_bens.py
+  downstream:
+  - pipelines/transform/er_casas_tse.py
+  tags:
+  - politico
+  - tse
+- id: tse_prestacao
+  source_id: tse_prestacao
+  dag_id: dag_tse_prestacao
+  domain: politico
+  schedule: 30 3 * * 1
+  probe:
+    kind: ckan_package
+    url: https://dadosabertos.tse.jus.br/api/3/action/package_show?id=prestacao-contas-eleitorais-2024
+  ingest: pipelines/ingest/tse_prestacao.py
+  tags:
+  - politico
+  - tse
+  atlas_domain: dinheiro_publico
+  canonical_model: CAMPAIGN_EXPENSE
+  data_type: event
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+  - neo4j
+- id: tse_legado
+  source_id: tse_ckan
+  dag_id: dag_tse_legado
+  domain: politico
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/tse.py
+  tags:
+  - politico
+  - tse
+  - legado
+- id: executivo_federal
+  source_id: executivo_federal
+  dag_id: dag_executivo_federal
+  domain: politico
+  schedule: 0 4 * * 1
+  probe:
+    kind: http_get_hash
+    url: https://www.gov.br/planalto/pt-br/conheca-a-presidencia/ministros-e-ministras/ministros-1
+  ingest: pipelines/ingest/executivo_federal.py
+  tags:
+  - politico
+  - executivo
+- id: stf_composicao
+  source_id: stf_composicao
+  dag_id: dag_stf_composicao
+  domain: politico
+  schedule: 0 5 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/stf_composicao.py
+  downstream:
+  - pipelines/transform/gold_stf_composicao_merge.py
+  tags:
+  - politico
+  - stf
+- id: governadores
+  source_id: governadores
+  dag_id: dag_governadores
+  domain: politico
+  schedule: 0 6 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/run_governadores.py
+  tags:
+  - politico
+  - governadores
+- id: governadores_historico
+  source_id: governadores
+  dag_id: dag_governadores_historico
+  domain: politico
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_governadores_historico.py
+  tags:
+  - politico
+  - governadores
+- id: onda1_politicos
+  source_id: camara_deputados
+  dag_id: dag_onda1_politicos
+  domain: politico
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_onda1.py
+  tags:
+  - politico
+  - onda
+  - orquestrador
+- id: coleta_politicos_ativos
+  source_id: camara_deputados
+  dag_id: dag_coleta_politicos_ativos
+  domain: politico
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_coleta_politicos_ativos.py
+  tags:
+  - politico
+  - onda
+  - orquestrador
+- id: camara_legislativo
+  source_id: camara_legislativo
+  dag_id: dag_camara_legislativo
+  domain: legislativo
+  schedule: 0 2 * * *
+  probe:
+    kind: http_get_hash
+    url: https://dadosabertos.camara.leg.br/api/v2/proposicoes?itens=15&ordem=DESC&ordenarPor=id
+  ingest: pipelines/ingest/camara_legislativo.py
+  downstream:
+  - pipelines/transform/silver_legislativo.py
+  - pipelines/transform/gold_legislativo_merge.py
+  tags:
+  - legislativo
+  - camara
+- id: senado_legislativo
+  source_id: senado_legislativo
+  dag_id: dag_senado_legislativo
+  domain: legislativo
+  schedule: 20 2 * * *
+  probe:
+    kind: http_get_hash
+    url: https://legis.senado.leg.br/dadosabertos/materia/pesquisa/lista?v=4
+  ingest: pipelines/ingest/senado_legislativo.py
+  tags:
+  - legislativo
+  - senado
+- id: camara_orgaos
+  source_id: camara_orgaos
+  dag_id: dag_camara_orgaos
+  domain: legislativo
+  schedule: 40 2 * * 1
+  probe:
+    kind: http_get_hash
+    url: https://dadosabertos.camara.leg.br/api/v2/orgaos?itens=100
+  ingest: pipelines/ingest/camara_orgaos.py
+  tags:
+  - legislativo
+  - camara
+- id: patch_votacao_proposicao
+  source_id: camara_legislativo
+  dag_id: dag_patch_votacao
+  domain: legislativo
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/patch_votacao_proposicao.py
+  tags:
+  - legislativo
+  - patch
+- id: run_legislativo
+  source_id: camara_legislativo
+  dag_id: dag_run_legislativo
+  domain: legislativo
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_legislativo.py
+  tags:
+  - legislativo
+  - orquestrador
+- id: pncp_api
+  source_id: pncp
+  dag_id: dag_pncp_api
+  domain: dinheiro
+  schedule: 0 1 * * *
+  probe:
+    kind: http_get_hash
+    url: https://pncp.gov.br/api/consulta/v1/contratos?pagina=1&tam_pagina=10
+  ingest: pipelines/ingest/pncp_api.py
+  downstream:
+  - pipelines/transform/silver_f1.py
+  - pipelines/transform/gold_f1_merge.py
+  tags:
+  - dinheiro
+  - pncp
+  atlas_domain: dinheiro_publico
+  canonical_model: CONTRACT
+  data_type: event
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+  - neo4j
+  - opensearch
+- id: transferegov_api
+  source_id: transferegov
+  dag_id: dag_transferegov_api
+  domain: dinheiro
+  schedule: 30 1 * * *
+  probe:
+    kind: http_head
+    url: https://api.transferegov.sistema.gov.br/transferenciasespeciais/transferencias
+  ingest: pipelines/ingest/transferegov_api.py
+  tags:
+  - dinheiro
+  - transferegov
+- id: camara_despesas_bulk
+  source_id: camara_despesas
+  dag_id: dag_camara_despesas
+  domain: dinheiro
+  schedule: 0 5 * * 2
+  probe:
+    kind: http_head
+    url: https://www.camara.leg.br/cotas/Ano-2025.csv.zip
+  ingest: pipelines/ingest/camara_despesas_bulk.py
+  tags:
+  - dinheiro
+  - camara
+- id: senado_despesas_ceaps
+  source_id: senado_ceaps
+  dag_id: dag_senado_ceaps
+  domain: dinheiro
+  schedule: 20 5 * * 2
+  probe:
+    kind: http_head
+    url: https://www.senado.gov.br/transparencia/LAI/verba/despesa_ceaps_2025.csv
+  ingest: pipelines/ingest/senado_despesas_ceaps.py
+  tags:
+  - dinheiro
+  - senado
+- id: cgu_emenda_documentos
+  source_id: cgu_emendas
+  dag_id: dag_cgu_emendas
+  domain: dinheiro
+  schedule: 0 6 * * *
+  probe:
+    kind: always
+  ingest: pipelines/ingest/cgu_emenda_documentos.py
+  downstream:
+  - pipelines/transform/gold_emenda_cadeia_merge.py
+  tags:
+  - dinheiro
+  - emendas
+- id: run_emenda_cadeia
+  source_id: cgu_emendas
+  dag_id: dag_run_emenda_cadeia
+  domain: dinheiro
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_emenda_cadeia.py
+  tags:
+  - dinheiro
+  - emendas
+  - orquestrador
+- id: remuneracao_oficial
+  source_id: remuneracao
+  dag_id: dag_remuneracao
+  domain: dinheiro
+  schedule: 0 7 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/remuneracao_oficial.py
+  tags:
+  - dinheiro
+  - remuneracao
+- id: cnj_magistrate_compensation
+  source_id: cnj_magistrate_compensation
+  dag_id: cnj_magistrate_compensation
+  dedicated_dag: true
+  domain: pessoal
+  schedule: 0 8 2 * *
+  probe:
+    kind: http_get_hash
+    url: https://www.cnj.jus.br/transparencia-cnj/remuneracao-dos-magistrados/
+  ingest: src/pipelines/cnj/compensation/run.py
+  tags:
+  - pessoal
+  - cnj
+  - magistrados
+  - remuneracao
+  notes: 'Remuneração de magistrados (Portaria 63/2017 / Res. 215/2015). DAG dedicada airflow/dags/cnj_magistrate_compensation.py.
+    Painel Qlik sem URL estável: exportações em data/inbox/cnj/compensation/. Não implementar DataJud neste dataset.
+
+    '
+  atlas_domain: pessoas_poder
+  canonical_model: MAGISTRATE_COMPENSATION
+  data_type: event
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: onda_f1
+  source_id: pncp
+  dag_id: dag_onda_f1
+  domain: dinheiro
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_onda_f1.py
+  tags:
+  - dinheiro
+  - onda
+  - orquestrador
+- id: dinheiro_empresas
+  source_id: pncp
+  dag_id: dag_dinheiro_empresas
+  domain: dinheiro
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_dinheiro_empresas.py
+  tags:
+  - dinheiro
+  - orquestrador
+- id: cnpj_rfb
+  source_id: rfb_cnpj
+  dag_id: dag_cnpj_rfb
+  domain: empresas
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/cnpj_rfb.py
+  downstream:
+  - pipelines/transform/silver_cnpj_rfb.py
+  tags:
+  - empresas
+  - cnpj
+  - receita
+  notes: 'Fase 1: ATLAS_CNPJ_MODE=interest_api (default) enriquece fila data/lake/queues/cnpj_interest.jsonl via BrasilAPI
+    (espelho RFB). Dump nacional só com ATLAS_CNPJ_MODE=dump + ATLAS_CNPJ_DUMP=1. CNPJ é chave COMPANY — sem fuzzy de razão
+    social.
+
+    '
+  atlas_domain: empresas_organizacoes
+  canonical_model: COMPANY
+  data_type: entity
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+  - neo4j
+- id: receita_arrecadacao
+  source_id: receita_arrecadacao
+  dag_id: dag_receita_arrecadacao
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_arrecadacao.py
+  downstream:
+  - pipelines/transform/silver_receita_arrecadacao.py
+  tags:
+  - indicadores
+  - fiscal
+  - receita
+  - contas_do_brasil
+  notes: 'Contas do Brasil (início): série histórica de arrecadação federal. Arrecadação RF ≠ toda receita pública brasileira.
+
+    '
+  atlas_domain: dinheiro_publico
+  canonical_model: PUBLIC_REVENUE_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: receita_renuncias
+  source_id: receita_renuncias
+  dag_id: dag_receita_renuncias
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_renuncias.py
+  downstream:
+  - pipelines/transform/silver_receita_renuncias.py
+  tags:
+  - indicadores
+  - fiscal
+  - receita
+  - contas_do_brasil
+  - renuncias
+  notes: 'TAX_EXPENDITURE: renúncia ≠ pagamento. ind_renuncia_fiscal (BRASIL). company_id só com CNPJ 14. ATLAS_RENUNCIAS_FILE.
+
+    '
+  atlas_domain: dinheiro_publico
+  canonical_model: TAX_EXPENDITURE_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: receita_carga_tributaria
+  source_id: receita_carga_tributaria
+  dag_id: dag_receita_carga_tributaria
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_carga_tributaria.py
+  downstream:
+  - pipelines/transform/silver_receita_carga_tributaria.py
+  tags:
+  - indicadores
+  - fiscal
+  - receita
+  - contas_do_brasil
+  notes: 'ind_carga_tributaria_pib separado de ind_arrecadacao_federal. Metodologia CTB (FGTS/Sistema S) no meta. ATLAS_CARGA_TRIBUTARIA_FILE.
+
+    '
+  atlas_domain: territorios_indicadores
+  canonical_model: INDICATOR_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: receita_transacao_tributaria
+  source_id: receita_transacao_tributaria
+  dag_id: dag_receita_transacao_tributaria
+  domain: empresas
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_transacao_tributaria.py
+  downstream:
+  - pipelines/transform/silver_receita_transacao.py
+  tags:
+  - empresas
+  - fiscal
+  - receita
+  - administrativo
+  notes: 'Acordos administrativos — não LEGAL_CASE. Editais HTML → SKIPPED. ATLAS_TRANSACAO_FILE para CSV/XLSX.
+
+    '
+- id: receita_contencioso
+  source_id: receita_contencioso
+  dag_id: dag_receita_contencioso
+  domain: empresas
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_contencioso.py
+  downstream:
+  - pipelines/transform/silver_receita_contencioso.py
+  tags:
+  - empresas
+  - fiscal
+  - receita
+  - administrativo
+  notes: 'ADMINISTRATIVE_TAX_CASE ≠ DataJud LEGAL_CASE. ATLAS_CONTENCIOSO_FILE.
+
+    '
+  atlas_domain: justica_controle
+  canonical_model: ADMINISTRATIVE_TAX_CASE
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: receita_cno
+  source_id: receita_cno
+  dag_id: dag_receita_cno
+  domain: empresas
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ingest/receita_cno.py
+  downstream:
+  - pipelines/transform/silver_receita_cno.py
+  tags:
+  - empresas
+  - fiscal
+  - receita
+  - obras
+  - cno
+  notes: 'CNO filtrado à fila cnpj_interest. CKAN pode 401. ATLAS_CNO_FILE.
+
+    '
+- id: cgu_portal
+  source_id: cgu_portal
+  dag_id: dag_cgu_portal
+  domain: empresas
+  schedule: 0 8 * * 3
+  requires_env:
+  - ATLAS_PORTAL_API_KEY
+  probe:
+    kind: http_head
+    url: https://api.portaldatransparencia.gov.br/api-de-dados
+  ingest: pipelines/ingest/cgu_portal.py
+  downstream:
+  - pipelines/transform/silver_cgu.py
+  - pipelines/transform/gold_cgu_merge.py
+  tags:
+  - empresas
+  - cgu
+- id: cgu_legal
+  source_id: cgu_portal
+  dag_id: dag_cgu_legal
+  domain: empresas
+  schedule: null
+  requires_env:
+  - ATLAS_PORTAL_API_KEY
+  probe:
+    kind: always
+  ingest: pipelines/ingest/cgu_legal.py
+  tags:
+  - empresas
+  - cgu
+  notes: 'Operações HTML: hook fail-soft extrai NPUs CNJ + match KB → datajud_discovery.jsonl.
+
+    '
+- id: onda_f2
+  source_id: rfb_cnpj
+  dag_id: dag_onda_f2
+  domain: empresas
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_onda_f2.py
+  tags:
+  - empresas
+  - onda
+  - orquestrador
+- id: ibge_territorios
+  source_id: ibge
+  dag_id: dag_ibge_territorios
+  domain: indicadores
+  schedule: 0 3 * * 0
+  probe:
+    kind: http_get_hash
+    url: https://servicodados.ibge.gov.br/api/v1/localidades/estados
+  ingest: pipelines/ingest/ibge_territorios.py
+  tags:
+  - indicadores
+  - ibge
+- id: ibge_populacao
+  source_id: ibge
+  dag_id: dag_ibge_populacao
+  domain: indicadores
+  schedule: 30 3 * * 0
+  probe:
+    kind: http_head
+    url: https://apisidra.ibge.gov.br/values/t/6579/n1/all/v/all/p/last%201
+  ingest: pipelines/ingest/ibge_sidra_populacao.py
+  downstream:
+  - pipelines/transform/silver_indicadores.py
+  tags:
+  - indicadores
+  - ibge
+  atlas_domain: territorios_indicadores
+  canonical_model: INDICATOR_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: ibge_pib
+  source_id: ibge
+  dag_id: dag_ibge_pib
+  domain: indicadores
+  schedule: 0 4 * * 0
+  probe:
+    kind: http_head
+    url: https://apisidra.ibge.gov.br/values/t/5938/n1/all/v/all/p/last%201
+  ingest: pipelines/ingest/ibge_sidra_pib.py
+  downstream:
+  - pipelines/transform/silver_indicadores.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - ibge
+- id: ibge_va
+  source_id: ibge
+  dag_id: dag_ibge_va
+  domain: indicadores
+  schedule: 15 4 * * 0
+  probe:
+    kind: http_head
+    url: https://apisidra.ibge.gov.br/values/t/5938/n3/all/v/513,517,6575/p/last%201
+  ingest: pipelines/ingest/ibge_sidra_va.py
+  downstream:
+  - pipelines/transform/silver_ibge_va.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - ibge
+  - va
+- id: inep_ideb
+  source_id: inep
+  dag_id: dag_inep_ideb
+  domain: indicadores
+  schedule: 0 5 * * 0
+  probe:
+    kind: http_head
+    url: https://download.inep.gov.br/ideb/resultados/divulgacao_anos_iniciais_municipios_2023.zip
+  ingest: pipelines/ingest/inep_ideb.py
+  downstream:
+  - pipelines/transform/silver_ideb.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - inep
+- id: inep_saeb
+  source_id: inep_saeb
+  dag_id: dag_inep_saeb
+  domain: indicadores
+  schedule: 30 5 * * 0
+  probe:
+    kind: http_head
+    url: https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/saeb/resultados/2023
+  ingest: pipelines/ingest/inep_saeb.py
+  downstream:
+  - pipelines/transform/silver_inep_saeb.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - inep
+  - saeb
+- id: inep_censo
+  source_id: inep_censo
+  dag_id: dag_inep_censo
+  domain: indicadores
+  schedule: 45 5 * * 0
+  probe:
+    kind: http_head
+    url: https://download.inep.gov.br/informacoes_estatisticas/indicadores_educacionais/2023/tx_rend_municipios_2023.zip
+  ingest: pipelines/ingest/inep_censo_escolar.py
+  downstream:
+  - pipelines/transform/silver_inep_censo.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - inep
+  - censo
+- id: siconfi_dca
+  source_id: siconfi
+  dag_id: dag_siconfi_dca
+  domain: indicadores
+  schedule: 0 4 * * 2
+  probe:
+    kind: http_get_hash
+    url: https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio=2024&id_ente=35
+  ingest: pipelines/ingest/siconfi_dca.py
+  downstream:
+  - pipelines/transform/silver_siconfi.py
+  - pipelines/transform/silver_siconfi_fiscal.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - siconfi
+  - contas_do_brasil
+  atlas_domain: dinheiro_publico
+  canonical_model: PUBLIC_BUDGET_EXECUTION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: siconfi_state_fiscal
+  source_id: siconfi
+  dag_id: dag_siconfi_state_fiscal
+  domain: indicadores
+  schedule: 30 4 * * 2
+  probe:
+    kind: http_get_hash
+    url: https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio=2024&id_ente=35
+  ingest: pipelines/ingest/siconfi_state_fiscal.py
+  downstream:
+  - pipelines/transform/silver_siconfi.py
+  - pipelines/transform/silver_siconfi_fiscal.py
+  tags:
+  - indicadores
+  - siconfi
+  - fiscal
+  - contas_do_brasil
+  notes: 'Fatia UF/DF do SICONFI (DCA+RCL). Estágios empenho/liquidação/pagamento quando a fonte publicar. ≠ RTN Governo Central.
+
+    '
+  atlas_domain: dinheiro_publico
+  canonical_model: PUBLIC_BUDGET_EXECUTION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: siconfi_municipal_fiscal
+  source_id: siconfi
+  dag_id: dag_siconfi_municipal_fiscal
+  domain: indicadores
+  schedule: 0 5 * * 2
+  probe:
+    kind: http_get_hash
+    url: https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio=2023&id_ente=3550308
+  ingest: pipelines/ingest/siconfi_municipal_fiscal.py
+  downstream:
+  - pipelines/transform/silver_siconfi.py
+  - pipelines/transform/silver_siconfi_fiscal.py
+  tags:
+  - indicadores
+  - siconfi
+  - fiscal
+  - contas_do_brasil
+  notes: 'Fatia municipal DCA. ATLAS_SICONFI_MUN_YEAR / MUN_YEARS controlam cobertura.
+
+    '
+  atlas_domain: dinheiro_publico
+  canonical_model: PUBLIC_BUDGET_EXECUTION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: tesouro_fiscal_result
+  source_id: tesouro
+  dag_id: dag_tesouro_fiscal_result
+  domain: indicadores
+  schedule: 0 3 5 * *
+  probe:
+    kind: http_get_hash
+    url: https://apiapex.tesouro.gov.br/aria/v1/series-temporais/custom/resultado-fiscal?tema=10&data_inicio=01/2024&data_fim=01/2024&codigo_da_serie=10.04.1
+  ingest: pipelines/ingest/tesouro_fiscal_result.py
+  downstream:
+  - pipelines/transform/silver_tesouro_fiscal.py
+  tags:
+  - fiscal
+  - tesouro
+  - rtn
+  - contas_do_brasil
+  notes: 'Resultado do Tesouro Nacional (acima/abaixo da linha + nominal + juros). Valores em R$ milhões. Não misturar metodologias.
+
+    '
+  atlas_domain: dinheiro_publico
+  canonical_model: FISCAL_RESULT_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: tesouro_revenue
+  source_id: tesouro
+  dag_id: dag_tesouro_revenue
+  domain: indicadores
+  schedule: 15 3 5 * *
+  probe:
+    kind: http_get_hash
+    url: https://apiapex.tesouro.gov.br/aria/v1/series-temporais/custom/resultado-fiscal?tema=10&data_inicio=01/2024&data_fim=01/2024&codigo_da_serie=10.01.1
+  ingest: pipelines/ingest/tesouro_revenue.py
+  downstream:
+  - pipelines/transform/silver_tesouro_fiscal.py
+  tags:
+  - fiscal
+  - tesouro
+  - receita
+  - contas_do_brasil
+  notes: Receita Total RTN ≠ arrecadação RFB.
+- id: tesouro_expenditure
+  source_id: tesouro
+  dag_id: dag_tesouro_expenditure
+  domain: indicadores
+  schedule: 30 3 5 * *
+  probe:
+    kind: http_get_hash
+    url: https://apiapex.tesouro.gov.br/aria/v1/series-temporais/custom/resultado-fiscal?tema=10&data_inicio=01/2024&data_fim=01/2024&codigo_da_serie=10.03.1
+  ingest: pipelines/ingest/tesouro_expenditure.py
+  downstream:
+  - pipelines/transform/silver_tesouro_fiscal.py
+  tags:
+  - fiscal
+  - tesouro
+  - despesa
+  - contas_do_brasil
+  notes: Despesa Total RTN ≠ empenho/liquidação/pagamento.
+- id: tesouro_public_debt
+  source_id: tesouro
+  dag_id: dag_tesouro_public_debt
+  domain: indicadores
+  schedule: 0 4 6 * *
+  probe:
+    kind: http_head
+    url: https://www.tesourotransparente.gov.br/ckan/dataset/estoque-da-divida-publica-federal
+  ingest: pipelines/ingest/tesouro_public_debt.py
+  downstream:
+  - pipelines/transform/silver_tesouro_fiscal.py
+  tags:
+  - fiscal
+  - tesouro
+  - divida
+  - contas_do_brasil
+  notes: Estoque DPF. ≠ DBGG/DLSP (BCB).
+  atlas_domain: dinheiro_publico
+  canonical_model: PUBLIC_DEBT_OBSERVATION
+  data_type: observation
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+- id: tesouro_debt_cost
+  source_id: tesouro
+  dag_id: dag_tesouro_debt_cost
+  domain: indicadores
+  schedule: 30 4 6 * *
+  probe:
+    kind: http_head
+    url: https://www.tesourotransparente.gov.br/ckan/dataset/execucao-orcamentaria-e-financeira-da-divida-publica-federal-por-nd
+  ingest: pipelines/ingest/tesouro_debt_cost.py
+  downstream:
+  - pipelines/transform/silver_tesouro_fiscal.py
+  tags:
+  - fiscal
+  - tesouro
+  - juros
+  - contas_do_brasil
+  notes: 'Juros nominais RTN + juros/encargos pagos (execução ND). Custo médio % a.a. / prazo médio (RMD) = cobertura parcial.
+
+    '
+- id: datasus_sim_sinasc
+  source_id: datasus
+  dag_id: dag_datasus
+  domain: indicadores
+  schedule: 0 5 * * 3
+  probe:
+    kind: ftp_listing
+    host: ftp.datasus.gov.br
+    path: /dissemin/publicos/SIM/CID10/DORES
+  ingest: pipelines/ingest/datasus_sim_sinasc.py
+  downstream:
+  - pipelines/transform/silver_datasus.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - datasus
+- id: caged_mov
+  source_id: caged
+  dag_id: dag_caged_mov
+  domain: indicadores
+  schedule: 0 6 * * 4
+  probe:
+    kind: ftp_listing
+    host: ftp.mtps.gov.br
+    path: /pdet/microdados/NOVO CAGED
+  ingest: pipelines/ingest/caged_mov.py
+  downstream:
+  - pipelines/transform/silver_caged.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - caged
+- id: datasus_sim_homicidios
+  source_id: datasus
+  dag_id: dag_datasus_homicidios
+  domain: indicadores
+  schedule: 30 5 * * 3
+  probe:
+    kind: ftp_listing
+    host: ftp.datasus.gov.br
+    path: /dissemin/publicos/SIM/CID10/DORES
+  ingest: pipelines/ingest/datasus_sim_homicidios.py
+  downstream:
+  - pipelines/transform/silver_datasus_homicidios.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - datasus
+  - seguranca
+- id: datasus_sih
+  source_id: datasus_sih
+  dag_id: dag_datasus_sih
+  domain: indicadores
+  schedule: 0 6 * * 3
+  probe:
+    kind: ftp_listing
+    host: ftp.datasus.gov.br
+    path: /dissemin/publicos/SIHSUS/200801_/Dados
+  ingest: pipelines/ingest/datasus_sih.py
+  downstream:
+  - pipelines/transform/silver_datasus_sih.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - datasus
+  - sih
+- id: datasus_sinan
+  source_id: datasus_sinan
+  dag_id: dag_datasus_sinan
+  domain: indicadores
+  schedule: 30 6 * * 3
+  probe:
+    kind: ftp_listing
+    host: ftp.datasus.gov.br
+    path: /dissemin/publicos/SINAN/DADOS/FINAIS
+  ingest: pipelines/ingest/datasus_sinan.py
+  downstream:
+  - pipelines/transform/silver_datasus_sinan.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - datasus
+  - sinan
+- id: snis_ae
+  source_id: snis
+  dag_id: dag_snis_ae
+  domain: indicadores
+  schedule: 0 7 * * 5
+  probe:
+    kind: http_get_hash
+    url: https://dadosabertos.cidades.gov.br/api/3/action/package_search?q=snis
+  ingest: pipelines/ingest/snis_ae.py
+  downstream:
+  - pipelines/transform/silver_snis.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - snis
+  - saneamento
+- id: caged_mov_mun
+  source_id: caged
+  dag_id: dag_caged_mov_mun
+  domain: indicadores
+  schedule: 30 6 * * 4
+  probe:
+    kind: ftp_listing
+    host: ftp.mtps.gov.br
+    path: /pdet/microdados/NOVO CAGED
+  ingest: pipelines/ingest/caged_mov_mun.py
+  downstream:
+  - pipelines/transform/silver_caged.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - caged
+  - municipio
+- id: rais_estoque
+  source_id: rais
+  dag_id: dag_rais_estoque
+  domain: indicadores
+  schedule: 0 8 * * 5
+  probe:
+    kind: ftp_listing
+    host: ftp.mtps.gov.br
+    path: /pdet/rais
+  ingest: pipelines/ingest/rais_estoque.py
+  downstream:
+  - pipelines/transform/silver_rais.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - rais
+  - emprego
+- id: idhm_atlas
+  source_id: idhm_atlas
+  dag_id: dag_idhm_atlas
+  domain: indicadores
+  schedule: 0 9 * * 0
+  probe:
+    kind: http_get_hash
+    url: http://www.ipeadata.gov.br/api/odata4/Metadados('ADH_IDHM')
+  ingest: pipelines/ingest/idhm_atlas.py
+  downstream:
+  - pipelines/transform/silver_idhm.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - idhm
+  - atlas
+- id: fogo_cruzado
+  source_id: fogocruzado
+  dag_id: dag_fogo_cruzado
+  domain: indicadores
+  schedule: 0 10 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/fogo_cruzado.py
+  downstream:
+  - pipelines/transform/silver_fogo_cruzado.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - seguranca
+  - fogocruzado
+- id: cadunico
+  source_id: cadunico
+  dag_id: dag_cadunico
+  domain: indicadores
+  schedule: 0 11 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/cadunico.py
+  downstream:
+  - pipelines/transform/silver_cadunico.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - social
+  - cadunico
+- id: ana_agua
+  source_id: ana
+  dag_id: dag_ana_agua
+  domain: indicadores
+  schedule: 30 11 * * 1
+  probe:
+    kind: http_get_hash
+    url: https://dadosabertos.ana.gov.br/
+  ingest: pipelines/ingest/ana_agua.py
+  downstream:
+  - pipelines/transform/silver_ana.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - saneamento
+  - ana
+- id: sinesp_cvli
+  source_id: sinesp_cvli
+  dag_id: dag_sinesp_cvli
+  domain: indicadores
+  schedule: 0 12 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/sinesp_cvli.py
+  downstream:
+  - pipelines/transform/silver_sinesp_cvli.py
+  - pipelines/transform/gold_indicadores_merge.py
+  tags:
+  - indicadores
+  - seguranca
+  - sinesp
+  - ipea
+- id: iceberg_indicadores
+  source_id: ibge
+  dag_id: dag_iceberg_indicadores
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: local_file_hash
+    path: data/lake/silver/indicadores/observations_latest.jsonl
+  ingest: pipelines/transform/iceberg_indicadores.py
+  tags:
+  - indicadores
+  - iceberg
+  - lakehouse
+- id: iceberg_documentos
+  source_id: stf
+  dag_id: dag_iceberg_documentos
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/lake_polars.py
+  tags:
+  - indicadores
+  - iceberg
+  - documentos
+  - lakehouse
+- id: serving_postgres
+  source_id: ibge
+  dag_id: dag_serving_postgres
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/load/serving_to_postgres.py
+  tags:
+  - indicadores
+  - serving
+  - postgres
+- id: serving_contas_postgres
+  source_id: tesouro
+  dag_id: dag_serving_contas_postgres
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/load/serving_contas_to_postgres.py
+  tags:
+  - indicadores
+  - serving
+  - postgres
+  - contas
+  - fiscal
+- id: run_indicadores
+  source_id: ibge
+  dag_id: dag_run_indicadores
+  domain: indicadores
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_indicadores.py
+  tags:
+  - indicadores
+  - orquestrador
+- id: dou
+  source_id: dou
+  dag_id: dag_dou
+  domain: outros
+  schedule: 0 9 * * *
+  probe:
+    kind: http_get_hash
+    url: https://www.in.gov.br/leiturajornal
+  ingest: pipelines/ingest/dou.py
+  tags:
+  - outros
+  - dou
+- id: stf
+  source_id: stf
+  dag_id: dag_stf
+  domain: outros
+  schedule: 0 10 * * 1
+  probe:
+    kind: always
+  ingest: pipelines/ingest/stf.py
+  tags:
+  - outros
+  - stf
+  notes: 'Após salvar HTML, hook fail-soft extrai NPUs CNJ → datajud_discovery.jsonl.
+
+    '
+- id: datajud_discovery_plug
+  source_id: cnj_datajud
+  dag_id: null
+  domain: outros
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/ops/plug_datajud_discovery.py
+  tags:
+  - outros
+  - datajud
+  - discovery
+  - ops
+  notes: 'Extrai NPUs CNJ de bronze STF/CGU (+ refetch leve) e alimenta data/lake/queues/datajud_discovery.jsonl (OFFICIAL_REFERENCE
+    / COMPANY_CONTEXT). Hooks leves também em ingest/stf.py e ingest/cgu_legal.py. Env: ATLAS_DISCOVERY_MAX_PAGES (default
+    30), ATLAS_DISCOVERY_REFETCH=0 para só scan.
+
+    '
+- id: datajud_cnj
+  source_id: cnj_datajud
+  dag_id: dag_datajud
+  domain: outros
+  schedule: null
+  requires_env:
+  - ATLAS_DATAJUD_API_KEY
+  probe:
+    kind: always
+  ingest: pipelines/ingest/datajud_cnj.py
+  transforms:
+  - pipelines/transform/silver_datajud.py
+  - pipelines/transform/gold_datajud_cases.py
+  tags:
+  - outros
+  - datajud
+  - legal_case
+  - enrichment
+  notes: 'Enriquecimento em 3 níveis (não espelho do Judiciário). Fila: data/lake/queues/datajud_discovery.jsonl + known_legal_cases
+    refresh (preenchida pelo datajud_discovery_plug / hooks STF·CGU). CASE_DISCOVERY + gate INGEST/IGNORE/QUARANTINE. ATLAS_DATAJUD_MAX
+    limita quantos processos INGEST consultar por run.
+
+    '
+  atlas_domain: justica_controle
+  canonical_model: LEGAL_CASE
+  data_type: event
+  storage_layer_target: bronze_minio
+  serving_destination:
+  - postgres
+  - neo4j
+- id: enrich_perfis
+  source_id: camara_deputados
+  dag_id: dag_enrich_perfis
+  domain: outros
+  schedule: 0 11 * * 0
+  probe:
+    kind: always
+  ingest: pipelines/ingest/enrich_perfis.py
+  tags:
+  - outros
+  - perfis
+- id: run_campanhas
+  source_id: tse_prestacao
+  dag_id: dag_run_campanhas
+  domain: outros
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_campanhas.py
+  tags:
+  - outros
+  - campanhas
+  - orquestrador
+- id: run_onda2
+  source_id: rfb_cnpj
+  dag_id: dag_run_onda2
+  domain: outros
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_onda2.py
+  tags:
+  - outros
+  - onda
+  - orquestrador
+- id: run_escopo_federal
+  source_id: camara_deputados
+  dag_id: dag_escopo_federal
+  domain: outros
+  schedule: null
+  probe:
+    kind: always
+  ingest: pipelines/run_escopo_federal.py
+  tags:
+  - outros
+  - orquestrador
+domains:
+  politico:
+    dag_id: dag_domain_politico
+    schedule: 0 2 * * *
+    children:
+    - dag_camara_api
+    - dag_senado_api
+    - dag_tse_bulk
+    - dag_tse_bens
+    - dag_executivo_federal
+    - dag_stf_composicao
+    - dag_governadores
+  legislativo:
+    dag_id: dag_domain_legislativo
+    schedule: 0 2 * * 1
+    children:
+    - dag_camara_legislativo
+    - dag_senado_legislativo
+    - dag_camara_orgaos
+  dinheiro:
+    dag_id: dag_domain_dinheiro
+    schedule: 0 1 * * *
+    children:
+    - dag_pncp_api
+    - dag_transferegov_api
+    - dag_camara_despesas
+    - dag_senado_ceaps
+    - dag_cgu_emendas
+    - dag_remuneracao
+    - dag_cnpj_rfb
+    - dag_receita_transacao_tributaria
+    - dag_receita_contencioso
+    - dag_receita_cno
+    notes: 'CNPJ (rfb_cnpj) é chave COMPANY — enriquecer fila de interesse, não dump nacional. Transação/contencioso = administrativo
+      (não DataJud). CNO escopado à fila.
+
+      '
+  indicadores:
+    dag_id: dag_domain_indicadores
+    schedule: 0 3 * * 0
+    wait_for_completion: true
+    poke_interval: 60
+    children:
+    - dag_ibge_territorios
+    - dag_ibge_populacao
+    - dag_ibge_pib
+    - dag_ibge_va
+    - dag_inep_ideb
+    - dag_inep_saeb
+    - dag_inep_censo
+    - dag_siconfi_dca
+    - dag_siconfi_state_fiscal
+    - dag_tesouro_fiscal_result
+    - dag_tesouro_revenue
+    - dag_tesouro_expenditure
+    - dag_tesouro_public_debt
+    - dag_tesouro_debt_cost
+    - dag_datasus
+    - dag_datasus_homicidios
+    - dag_datasus_sih
+    - dag_datasus_sinan
+    - dag_caged_mov
+    - dag_caged_mov_mun
+    - dag_snis_ae
+    - dag_rais_estoque
+    - dag_idhm_atlas
+    - dag_cadunico
+    - dag_ana_agua
+    - dag_receita_arrecadacao
+    - dag_receita_renuncias
+    - dag_receita_carga_tributaria
+    - dag_sinesp_cvli
+    - dag_iceberg_indicadores
+    - dag_iceberg_documentos
+    - dag_serving_postgres
+    - dag_serving_contas_postgres
+    notes: 'Contas do Brasil: arrecadação RF + renúncias + carga (% PIB, separado) + tesouro_* + siconfi_*. Conceitos fiscais
+      NÃO são intercambiáveis — ver docs/contas_do_brasil_fiscal.md. # Pacote P3 estadual (segurança/saúde/educação/saneamento
+      UF) — ops:
+
+      '
+  nightly:
+    dag_id: dag_atlas_nightly
+    schedule: 0 1 * * *
+    children:
+    - dag_domain_politico
+    - dag_domain_legislativo
+    - dag_domain_dinheiro
+    - dag_domain_indicadores

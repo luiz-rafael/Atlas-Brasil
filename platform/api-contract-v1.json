@@ -1,0 +1,86 @@
+{
+  "nome": "AntiSistema Platform API Contract",
+  "versao": "1.0.0",
+  "base_url_sugerida": "/api/v1",
+  "fonte_dados": "data/antisistema-kb-v1.json",
+  "autenticacao": "opcional na v1 (leitura pública); escrita autenticada em versões futuras",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "descricao": "Status do serviço e versão da KB"
+    },
+    {
+      "method": "GET",
+      "path": "/pessoas",
+      "query": ["q", "partido", "no_poder", "tag", "limit", "offset"],
+      "descricao": "Lista entidades tipo pessoa"
+    },
+    {
+      "method": "GET",
+      "path": "/pessoas/{id}",
+      "descricao": "Página individual da pessoa + registros_pessoa_caso + relações"
+    },
+    {
+      "method": "GET",
+      "path": "/casos",
+      "query": ["eixo", "periodo"],
+      "descricao": "Lista de escândalos/casos"
+    },
+    {
+      "method": "GET",
+      "path": "/casos/{id}",
+      "descricao": "Caso + pessoas vinculadas + eventos mecanismo + fluxos"
+    },
+    {
+      "method": "GET",
+      "path": "/registros",
+      "query": ["status", "caso_id", "pessoa_id", "camada", "no_poder"],
+      "descricao": "Tabela pessoa–caso (banco de escândalos)"
+    },
+    {
+      "method": "GET",
+      "path": "/mecanismos",
+      "query": ["classificacao", "caso_id", "mecanismo"],
+      "descricao": "Eventos §29 proteção/obstrução"
+    },
+    {
+      "method": "GET",
+      "path": "/grafo",
+      "query": ["centro_id", "profundidade", "tipos_relacao", "grau_minimo"],
+      "descricao": "Subgrafo a partir de um nó; só arestas com justificativa_documental"
+    },
+    {
+      "method": "GET",
+      "path": "/timeline",
+      "query": ["caso_id", "eixo", "de", "ate"],
+      "descricao": "Marcos temporais cruzados"
+    },
+    {
+      "method": "GET",
+      "path": "/financeiro",
+      "query": ["caso_id"],
+      "descricao": "Fluxos com camadas valor_suspeito→comprovado"
+    },
+    {
+      "method": "GET",
+      "path": "/busca",
+      "query": ["q"],
+      "descricao": "Busca full-text em pessoas, casos, registros, eventos"
+    }
+  ],
+  "regras_resposta": {
+    "sempre_incluir": ["id", "fontes", "grau_confirmacao_quando_aplicavel"],
+    "separar_camadas": ["fato", "acusacao", "hipotese"],
+    "proibir": "Inferir culpa a partir de citação ou aresta de grafo sem status jurídico"
+  },
+  "apps": {
+    "web": {
+      "rotas": ["/", "/pessoas/:id", "/casos/:id", "/grafo", "/timeline", "/mecanismos", "/busca"]
+    },
+    "mobile": {
+      "telas": ["Home", "Pessoa", "Caso", "Grafo", "Timeline", "Busca"],
+      "offline": "cache da KB versionada"
+    }
+  }
+}

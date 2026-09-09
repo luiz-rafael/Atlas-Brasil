@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atlas://contracts/silver_politicos",
+  "title": "Silver políticos ATLAS",
+  "description": "Registro canônico pós-normalização (antes do gold/dedupe).",
+  "type": "object",
+  "required": ["id_externo", "fonte", "nome", "fetched_at"],
+  "properties": {
+    "id_externo": {
+      "type": "string",
+      "description": "ID na fonte: cam:{id}, sen:{codigo}, tse:{sq_candidato}"
+    },
+    "fonte": {
+      "enum": ["camara_v2", "senado_legis", "tse_ckan", "tse_divulga"]
+    },
+    "nome": { "type": "string", "minLength": 2 },
+    "nome_urna": { "type": ["string", "null"] },
+    "partido_sigla": { "type": ["string", "null"] },
+    "uf": { "type": ["string", "null"], "maxLength": 2 },
+    "cargo": { "type": ["string", "null"] },
+    "situacao": { "type": ["string", "null"] },
+    "legislatura": { "type": ["integer", "null"] },
+    "eleicao_ano": { "type": ["integer", "null"] },
+    "email": { "type": ["string", "null"] },
+    "url_foto": { "type": ["string", "null"] },
+    "url_fonte": { "type": ["string", "null"] },
+    "sexo": { "type": ["string", "null"] },
+    "data_nascimento": { "type": ["string", "null"] },
+    "municipio": { "type": ["string", "null"] },
+    "raw_ref": {
+      "type": "string",
+      "description": "Caminho relativo no bronze ou checksum do registro bruto"
+    },
+    "fetched_at": { "type": "string", "format": "date-time" }
+  }
+}

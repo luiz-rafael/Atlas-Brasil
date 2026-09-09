@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atlas://contracts/gold_kb",
+  "title": "Gold KB gerada por coleta",
+  "type": "object",
+  "required": ["meta", "entidades", "relacoes", "documentos"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["versao", "gerado_em", "pipeline", "fontes"],
+      "properties": {
+        "versao": { "type": "string" },
+        "gerado_em": { "type": "string" },
+        "pipeline": { "const": "onda1_oficial" },
+        "fontes": { "type": "array", "items": { "type": "string" } },
+        "regra_ouro": { "type": "string" }
+      }
+    },
+    "entidades": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "tipo", "nome"],
+        "properties": {
+          "id": { "type": "string" },
+          "tipo": { "enum": ["pessoa", "partido", "instituicao", "empresa"] },
+          "nome": { "type": "string" },
+          "partido": { "type": ["string", "null"] },
+          "cargo_atual": { "type": ["string", "null"] },
+          "uf": { "type": ["string", "null"] },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "aliases": { "type": "array", "items": { "type": "string" } },
+          "source_ids": { "type": "array", "items": { "type": "string" } },
+          "no_poder_2026": { "type": "boolean" }
+        }
+      }
+    },
+    "relacoes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "origem",
+          "destino",
+          "tipo",
+          "justificativa_documental",
+          "grau_confirmacao",
+          "fonte_ids"
+        ]
+      }
+    },
+    "documentos": { "type": "array" },
+    "casos": { "type": "array" },
+    "timeline": { "type": "array" },
+    "registros_pessoa_caso": { "type": "array" }
+  }
+}

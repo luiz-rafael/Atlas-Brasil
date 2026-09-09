@@ -1,0 +1,20 @@
+{
+  "gerado_em": "2026-09-06T22:32:22.066425+00:00",
+  "silver_rows": 81895,
+  "clusters": 81892,
+  "pessoas": 81892,
+  "partidos": 44,
+  "relacoes": 3784,
+  "documentos": 1896,
+  "por_fonte_silver": {
+    "camara_v2": 1814,
+    "senado_legis": 81,
+    "tse_ckan": 80000
+  },
+  "por_cargo": {
+    "Deputado Federal": 1812,
+    "Senador": 80,
+    "?": 80000
+  },
+  "gold_path": "C:\\Users\\k13ra\\OneDrive\\Documentos\\AntiSistema\\data\\atlas-brasil-kb-gold.json"
+}

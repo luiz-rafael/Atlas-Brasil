@@ -1,0 +1,79 @@
+# CI — arquitetura lakehouse (Fase 5)
+# Unitários sempre; stack MinIO quando o serviço sobe.
+
+name: architecture-smoke
+
+on:
+  push:
+    paths:
+      - "pipelines/storage/**"
+      - "pipelines/lakehouse/**"
+      - "pipelines/raw_store.py"
+      - "pipelines/ops/phase*.py"
+      - "pipelines/ops/iceberg*.py"
+      - "pipelines/ops/ensure_*.py"
+      - "tests/test_architecture_storage.py"
+      - "tests/test_phase5_lakehouse.py"
+      - ".github/workflows/architecture-smoke.yml"
+  pull_request:
+    paths:
+      - "pipelines/storage/**"
+      - "pipelines/lakehouse/**"
+      - "pipelines/raw_store.py"
+      - "pipelines/ops/**"
+      - "tests/test_architecture_storage.py"
+      - "tests/test_phase5_lakehouse.py"
+  workflow_dispatch:
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: |
+          pip install -q pytest polars pyarrow sqlalchemy pyyaml boto3
+          pip install -q "pyiceberg[pyarrow,sql-sqlite]>=0.7.0"
+      - name: Architecture unit tests
+        run: |
+          pytest -q tests/test_architecture_storage.py tests/test_phase5_lakehouse.py
+
+  minio-smoke:
+    runs-on: ubuntu-latest
+    needs: unit
+    services:
+      minio:
+        image: bitnami/minio:latest
+        env:
+          MINIO_ROOT_USER: atlasminio
+          MINIO_ROOT_PASSWORD: atlasbrasilminio
+        ports:
+          - 9000:9000
+        options: >-
+          --health-cmd "curl -f http://localhost:9000/minio/health/live || exit 1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      ATLAS_MINIO_ENABLED: "1"
+      ATLAS_STORAGE_BACKEND: dual
+      ATLAS_MINIO_ENDPOINT: http://127.0.0.1:9000
+      ATLAS_MINIO_ACCESS_KEY: atlasminio
+      ATLAS_MINIO_SECRET_KEY: atlasbrasilminio
+      ATLAS_MINIO_BUCKET: atlas-raw
+      ATLAS_ICEBERG_S3_BUCKET: atlas-iceberg
+      ATLAS_ICEBERG_S3_WAREHOUSE: s3://atlas-iceberg/warehouse
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: |
+          pip install -q pytest polars pyarrow sqlalchemy pyyaml boto3
+          pip install -q "pyiceberg[pyarrow,sql-sqlite]>=0.7.0"
+      - name: Phase 5 ops smoke (require MinIO)
+        run: python pipelines/ops/phase5_ops_smoke.py --require-minio

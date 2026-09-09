@@ -1,0 +1,163 @@
+# Mapa canônico Atlas — domínio / modelo / destino de serving
+# Fonte NÃO é o conceito de produto.
+#
+# atlas_domain:
+#   pessoas_poder | empresas_organizacoes | dinheiro_publico
+#   | justica_controle | territorios_indicadores | documentos_evidencias
+#
+# data_type: entity | event | observation | scd2 | document | relation
+# storage_layer_target: bronze_minio | silver_iceberg | gold_iceberg
+# serving_destination: postgres | neo4j | opensearch | none
+
+datasets:
+  cnpj_rfb:
+    atlas_domain: empresas_organizacoes
+    canonical_model: COMPANY
+    data_type: entity
+    storage_layer_target: bronze_minio
+    silver_model: COMPANY
+    gold_model: COMPANY
+    serving_destination: [postgres, neo4j]
+    notes: CNPJ é chave. Sem merge por nome.
+
+  pncp_api:
+    atlas_domain: dinheiro_publico
+    canonical_model: CONTRACT
+    data_type: event
+    storage_layer_target: bronze_minio
+    silver_model: CONTRACT
+    gold_model: CONTRACT
+    serving_destination: [postgres, neo4j, opensearch]
+    notes: Relação COMPANY↔PUBLIC_AGENCY via CONTRACT.
+
+  tse_prestacao:
+    atlas_domain: dinheiro_publico
+    canonical_model: CAMPAIGN_EXPENSE
+    data_type: event
+    storage_layer_target: bronze_minio
+    silver_model: CAMPAIGN_EXPENSE
+    gold_model: CAMPAIGN_EXPENSE
+    serving_destination: [postgres, neo4j]
+    related_domains: [pessoas_poder]
+
+  receita_arrecadacao:
+    atlas_domain: dinheiro_publico
+    canonical_model: PUBLIC_REVENUE_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    silver_model: PUBLIC_REVENUE_OBSERVATION
+    gold_model: INDICATOR_OBSERVATION
+    serving_destination: [postgres]
+    notes: Arrecadação RF ≠ toda receita pública. Não virar nós Neo4j mensais.
+
+  tesouro_public_debt:
+    atlas_domain: dinheiro_publico
+    canonical_model: PUBLIC_DEBT_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    silver_model: PUBLIC_DEBT_OBSERVATION
+    gold_model: PUBLIC_DEBT_OBSERVATION
+    serving_destination: [postgres]
+    notes: DPF ≠ DBGG ≠ DLSP.
+
+  tesouro_fiscal_result:
+    atlas_domain: dinheiro_publico
+    canonical_model: FISCAL_RESULT_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    silver_model: FISCAL_RESULT_OBSERVATION
+    gold_model: FISCAL_RESULT_OBSERVATION
+    serving_destination: [postgres]
+    notes: primary_result ≠ nominal_result.
+
+  siconfi_dca:
+    atlas_domain: dinheiro_publico
+    canonical_model: PUBLIC_BUDGET_EXECUTION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    silver_model: PUBLIC_BUDGET_EXECUTION
+    gold_model: PUBLIC_BUDGET_EXECUTION
+    serving_destination: [postgres]
+    related_domains: [territorios_indicadores]
+    notes: Preservar authorized/committed/liquidated/paid.
+
+  siconfi_state_fiscal:
+    atlas_domain: dinheiro_publico
+    canonical_model: PUBLIC_BUDGET_EXECUTION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+
+  siconfi_municipal_fiscal:
+    atlas_domain: dinheiro_publico
+    canonical_model: PUBLIC_BUDGET_EXECUTION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+
+  receita_renuncias:
+    atlas_domain: dinheiro_publico
+    canonical_model: TAX_EXPENDITURE_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+    notes: Renúncia ≠ pagamento. value_type OBSERVED|ESTIMATED|PROJECTED.
+
+  receita_carga_tributaria:
+    atlas_domain: territorios_indicadores
+    canonical_model: INDICATOR_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+    notes: ≠ ind_arrecadacao_federal.
+
+  receita_contencioso:
+    atlas_domain: justica_controle
+    canonical_model: ADMINISTRATIVE_TAX_CASE
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+    notes: ≠ LEGAL_CASE / DataJud.
+
+  datajud_cnj:
+    atlas_domain: justica_controle
+    canonical_model: LEGAL_CASE
+    data_type: event
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres, neo4j]
+    notes: Não espelho nacional. Gate CASE_DISCOVERY.
+
+  ibge_populacao:
+    atlas_domain: territorios_indicadores
+    canonical_model: INDICATOR_OBSERVATION
+    data_type: observation
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+
+  cnj_magistrate_compensation:
+    atlas_domain: pessoas_poder
+    canonical_model: MAGISTRATE_COMPENSATION
+    data_type: event
+    storage_layer_target: bronze_minio
+    serving_destination: [postgres]
+    notes: Competência = evento. gross ≠ subsídio.
+
+domains:
+  pessoas_poder:
+    label: Pessoas e Poder
+    models: [PERSON, POLITICIAN, PARTY, CANDIDACY, MANDATE, OFFICE_TENURE, VOTE, PROPOSITION, MAGISTRATE_COMPENSATION]
+  empresas_organizacoes:
+    label: Empresas e Organizações
+    models: [COMPANY, ESTABLISHMENT, COMPANY_STATUS, COMPANY_PARTNER, PUBLIC_AGENCY, ORGANIZATION, CNAE]
+  dinheiro_publico:
+    label: Dinheiro Público
+    models: [PUBLIC_REVENUE_OBSERVATION, PUBLIC_EXPENDITURE_OBSERVATION, PUBLIC_DEBT_OBSERVATION, FISCAL_RESULT_OBSERVATION, TAX_EXPENDITURE_OBSERVATION, PUBLIC_BUDGET_EXECUTION, CONTRACT, PROCUREMENT, AMENDMENT, TRANSFER, PAYMENT, CAMPAIGN_EXPENSE, PERSONNEL_EXPENDITURE]
+  justica_controle:
+    label: Justiça e Controle
+    models: [LEGAL_CASE, CASE_MOVEMENT, CASE_STATUS, CASE_PARTICIPATION, ADMINISTRATIVE_TAX_CASE, AUDIT, CONTROL_ACTION, OFFICIAL_DECISION]
+  territorios_indicadores:
+    label: Territórios e Indicadores
+    models: [TERRITORY, INDICATOR, INDICATOR_OBSERVATION]
+  documentos_evidencias:
+    label: Documentos e Evidências
+    models: [SOURCE, DATASET, SOURCE_RECORD, DOCUMENT, EVIDENCE, INGESTION_RUN]

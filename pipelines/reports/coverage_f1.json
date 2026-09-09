@@ -1,0 +1,1034 @@
+{
+  "gerado_em": "2026-09-08T16:48:12.880017+00:00",
+  "total_sources": 55,
+  "por_status": {
+    "active": 20,
+    "registered": 9,
+    "partial": 24,
+    "stub": 1,
+    "enrichment_ready": 1
+  },
+  "por_coverage_status": {
+    "PARTIAL": 23,
+    "UNKNOWN": 28,
+    "AVAILABLE": 4
+  },
+  "por_health_status": {
+    "HEALTHY": 42,
+    "UNKNOWN": 10,
+    "DEGRADED": 3
+  },
+  "sources": [
+    {
+      "source_id": "tse_ckan",
+      "source_name": "TSE Dados Abertos (CKAN)",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "tse_bulk",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "1988",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T03:31:56.404500+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T033141Z",
+      "counts": {
+        "arquivos": 10,
+        "packages": 10
+      }
+    },
+    {
+      "source_id": "tse_bens",
+      "source_name": "TSE Bens de Candidatos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "tse_bens",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T20:38:02.733164+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T203800Z",
+      "counts": {
+        "bytes": 5369508,
+        "csv": 29
+      }
+    },
+    {
+      "source_id": "tse_prestacao",
+      "source_name": "TSE Prestação de Contas",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "tse_prestacao",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T02:12:58.720043+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T021257Z",
+      "counts": {
+        "arquivos": 1,
+        "csvs_candidatos": 79
+      }
+    },
+    {
+      "source_id": "tse_divulga",
+      "source_name": "TSE DivulgaCandContas",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "camara_v2",
+      "source_name": "Câmara dos Deputados Dados Abertos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "camara_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:32:06.120490+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T222911Z",
+      "counts": {
+        "deputados": 1814,
+        "partidos": 22
+      }
+    },
+    {
+      "source_id": "camara_orgaos",
+      "source_name": "Câmara Órgãos / Frentes / Comissões",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "camara_orgaos",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T20:39:37.885719+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T203812Z",
+      "counts": {
+        "orgaos": 500,
+        "frentes": 500,
+        "membros": 2995
+      }
+    },
+    {
+      "source_id": "camara_legislativo",
+      "source_name": "Câmara Proposições e Votações",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "camara_legislativo",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2022",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:39:37.877761+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T223227Z",
+      "counts": {
+        "proposicoes": 547276,
+        "autores": 989297,
+        "votos": 1724603
+      }
+    },
+    {
+      "source_id": "camara_despesas_bulk",
+      "source_name": "Câmara Cota Parlamentar (arquivos anuais)",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "camara_despesas_bulk",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2008",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T01:54:31.586618+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T015421Z",
+      "counts": {
+        "pessoas": 618,
+        "linhas": 441980
+      }
+    },
+    {
+      "source_id": "senado_legis",
+      "source_name": "Senado Federal Dados Abertos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "senado_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:32:07.755164+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T223206Z",
+      "counts": {
+        "senadores": 81
+      }
+    },
+    {
+      "source_id": "senado_ceaps",
+      "source_name": "Senado CEAPS — cotas parlamentares",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "senado_despesas_ceaps",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2008",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T03:07:46.951522+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T030709Z",
+      "counts": {
+        "linhas": 45211,
+        "pessoas": 72,
+        "fornecedores": 825
+      }
+    },
+    {
+      "source_id": "senado_legislativo",
+      "source_name": "Senado Autorias e Votações",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "senado_legislativo",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2022",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:42:26.312625+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T223938Z",
+      "counts": {
+        "autorias": 55418,
+        "votos": 77073
+      }
+    },
+    {
+      "source_id": "remuneracao_oficial",
+      "source_name": "Remuneração / Subsídio por cargo (macro)",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "remuneracao_oficial",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:42:26.757142+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T224226Z",
+      "counts": {
+        "series": 15
+      }
+    },
+    {
+      "source_id": "executivo_federal",
+      "source_name": "Executivo Federal (Presidente/Vice/Ministros)",
+      "status": "partial",
+      "priority": 1,
+      "connector_name": "executivo_federal",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2010",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:52:24.742288+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T225222Z",
+      "counts": {
+        "pessoas": 36,
+        "ministros": 28
+      }
+    },
+    {
+      "source_id": "rfb_cnpj",
+      "source_name": "Receita Federal CNPJ",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "cnpj_rfb",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T21:42:44.046687+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T214201Z",
+      "counts": {
+        "enriched": 50,
+        "errors": 0,
+        "requested": 50
+      }
+    },
+    {
+      "source_id": "receita_arrecadacao",
+      "source_name": "Receita Federal — Arrecadação (série histórica)",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "receita_arrecadacao",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T21:42:58.843565+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T214257Z",
+      "counts": {
+        "rows": 384
+      }
+    },
+    {
+      "source_id": "receita_renuncias",
+      "source_name": "Receita Federal — Benefícios/Renúncias fiscais",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "receita_renuncias",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:00:55.557645+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T220038Z",
+      "counts": {
+        "rows": 228401
+      }
+    },
+    {
+      "source_id": "receita_carga_tributaria",
+      "source_name": "Receita Federal — Carga tributária (CTB)",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "receita_carga_tributaria",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:00:09.779908+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T220007Z",
+      "counts": {
+        "rows": 9
+      }
+    },
+    {
+      "source_id": "receita_transacao_tributaria",
+      "source_name": "Receita Federal — Transações tributárias",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "receita_transacao_tributaria",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:00:14.013092+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T220010Z",
+      "counts": {
+        "rows": 0
+      }
+    },
+    {
+      "source_id": "receita_contencioso",
+      "source_name": "Receita Federal — Contencioso administrativo",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "receita_contencioso",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:19:27.167984+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T221925Z",
+      "counts": {
+        "cases": 0,
+        "indicators": 271
+      }
+    },
+    {
+      "source_id": "receita_cno",
+      "source_name": "Receita Federal — Cadastro Nacional de Obras (CNO)",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "receita_cno",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:39:25.312322+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T223813Z",
+      "counts": {
+        "rows": 10562,
+        "csv_rows_scanned": 3594150,
+        "rows_with_cnpj14": 1208371,
+        "interest_size": 117538,
+        "matched_interest": 10562,
+        "kept": 10562
+      }
+    },
+    {
+      "source_id": "pncp",
+      "source_name": "Portal Nacional de Contratações Públicas",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "pncp_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-08T16:45:28.469757+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260908T164151Z",
+      "counts": {
+        "contratos": 2500
+      }
+    },
+    {
+      "source_id": "compras_gov",
+      "source_name": "Compras.gov.br",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cgu_portal",
+      "source_name": "Portal da Transparência / CGU",
+      "status": "stub",
+      "priority": 2,
+      "connector_name": "cgu_portal",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T01:48:18.985108+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T013342Z",
+      "counts": {
+        "emendas": 9152,
+        "sancoes": 2,
+        "autores_com_emenda": 309
+      }
+    },
+    {
+      "source_id": "cgu_emenda_documentos",
+      "source_name": "Portal da Transparência — documentos de emendas",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "cgu_emenda_documentos",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T02:32:45.853195+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T022703Z",
+      "counts": {
+        "documentos": 505,
+        "emendas": 28,
+        "com_beneficiario": 28
+      }
+    },
+    {
+      "source_id": "transferegov",
+      "source_name": "Transferegov Dados Abertos",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "transferegov_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T21:05:28.876209+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T210527Z",
+      "counts": {
+        "registros": 50
+      }
+    },
+    {
+      "source_id": "tcu",
+      "source_name": "Tribunal de Contas da União",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "siconfi_portal",
+      "source_name": "SICONFI / Tesouro Nacional (portal)",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2013",
+      "coverage_end": "atual",
+      "coverage_status": "AVAILABLE",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cnj_datajud",
+      "source_name": "CNJ DataJud (API pública)",
+      "status": "enrichment_ready",
+      "priority": 3,
+      "connector_name": "datajud_cnj",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "VARIABLE",
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T21:18:56.922767+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T211851Z",
+      "counts": {
+        "cases": 3,
+        "movements": 625,
+        "subjects": 3,
+        "skipped_unchanged": 0,
+        "errors": 1
+      }
+    },
+    {
+      "source_id": "stf",
+      "source_name": "Supremo Tribunal Federal",
+      "status": "partial",
+      "priority": 4,
+      "connector_name": "stf",
+      "reliability": "JUDICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "DEGRADED",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "stf_composicao",
+      "source_name": "STF — composição de ministros",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "stf_composicao",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2026",
+      "coverage_end": "2026",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-06T22:53:12.749296+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260906T225312Z",
+      "counts": {
+        "ministros": 10,
+        "vagas": 1
+      }
+    },
+    {
+      "source_id": "stj",
+      "source_name": "Superior Tribunal de Justiça",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "JUDICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "ibge",
+      "source_name": "IBGE Serviços de Dados / SIDRA",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "ibge_territorios",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2000",
+      "coverage_end": "atual",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:31:41.214760+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T192356Z",
+      "counts": {
+        "extract": 111866,
+        "anos": 22,
+        "falhas_ano": 0
+      }
+    },
+    {
+      "source_id": "inep",
+      "source_name": "INEP — IDEB e indicadores educacionais",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "inep_ideb",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2005",
+      "coverage_end": "atual",
+      "coverage_status": "AVAILABLE",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T18:15:00.038410+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T181435Z",
+      "counts": {
+        "arquivos": 4
+      }
+    },
+    {
+      "source_id": "inep_saeb",
+      "source_name": "INEP — Saeb (resultados agregados)",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "inep_saeb",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:57:59.173214+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T195749Z",
+      "counts": {
+        "rows": 5478
+      }
+    },
+    {
+      "source_id": "inep_censo",
+      "source_name": "INEP — Censo Escolar (matrículas)",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "inep_censo_escolar",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:54:01.911548+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T195348Z",
+      "counts": {
+        "rows": 5570
+      }
+    },
+    {
+      "source_id": "siconfi",
+      "source_name": "SICONFI — Tesouro Nacional",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "siconfi_dca",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2013",
+      "coverage_end": "atual",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:32:00.945202+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T180120Z",
+      "counts": {
+        "ok": 9524,
+        "fail": 1,
+        "mun": 9524
+      }
+    },
+    {
+      "source_id": "tesouro",
+      "source_name": "Tesouro Nacional — Contas do Brasil (RTN / DPF)",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "tesouro_fiscal_result",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "1997",
+      "coverage_end": "atual",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T22:21:09.612118+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T221743Z",
+      "counts": {
+        "observations": 349
+      }
+    },
+    {
+      "source_id": "datasus",
+      "source_name": "DATASUS — Ministério da Saúde",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "datasus_sim_sinasc",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2015",
+      "coverage_end": "2022",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:06:53.853329+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T184730Z",
+      "counts": {
+        "ok": 216,
+        "fail": 0
+      }
+    },
+    {
+      "source_id": "datasus_sih",
+      "source_name": "DATASUS SIH — Internações (AIH RD)",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "datasus_sih",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T20:58:33.177952+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T193518Z",
+      "counts": {
+        "ok": 936,
+        "fail": 0,
+        "annual": 81
+      }
+    },
+    {
+      "source_id": "datasus_sinan",
+      "source_name": "DATASUS SINAN — Notificações (dengue slice)",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "datasus_sinan",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:34:20.316254+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T192357Z",
+      "counts": {
+        "rows": 19091
+      }
+    },
+    {
+      "source_id": "caged",
+      "source_name": "Novo CAGED — MTE/PDET",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "caged_mov",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2020",
+      "coverage_end": "atual",
+      "coverage_status": "AVAILABLE",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:15:46.485451+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T184731Z",
+      "counts": {
+        "ok": 36,
+        "fail": 0
+      }
+    },
+    {
+      "source_id": "snis",
+      "source_name": "SNIS / SINISA — Saneamento",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "snis_ae",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "1995",
+      "coverage_end": "atual",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T18:48:00.910321+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T184730Z",
+      "counts": {
+        "rows": 5246
+      }
+    },
+    {
+      "source_id": "rais",
+      "source_name": "RAIS — Relação Anual de Informações Sociais",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "rais_estoque",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "2007",
+      "coverage_end": "2017",
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T18:47:35.988357+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T184732Z",
+      "counts": {
+        "rows": 108
+      }
+    },
+    {
+      "source_id": "idhm_atlas",
+      "source_name": "Atlas do Desenvolvimento Humano / IDHM",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "idhm_atlas",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "1991",
+      "coverage_end": "2010",
+      "coverage_status": "AVAILABLE",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T18:49:35.914341+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T184801Z",
+      "counts": {
+        "rows": 16773
+      }
+    },
+    {
+      "source_id": "fogocruzado",
+      "source_name": "Fogo Cruzado (crossfire)",
+      "status": "partial",
+      "priority": 4,
+      "connector_name": "fogo_cruzado",
+      "reliability": "COLLABORATIVE",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "DEGRADED",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cadunico",
+      "source_name": "Cadastro Único — MDS",
+      "status": "partial",
+      "priority": 3,
+      "connector_name": "cadunico",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:53:50.541814+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T195347Z",
+      "counts": {
+        "rows": 5571
+      }
+    },
+    {
+      "source_id": "ana",
+      "source_name": "ANA — Agência Nacional de Águas",
+      "status": "partial",
+      "priority": 4,
+      "connector_name": "ana_agua",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:53:49.955893+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T195348Z",
+      "counts": {
+        "rows": 5282
+      }
+    },
+    {
+      "source_id": "sinesp_cvli",
+      "source_name": "Sinesp / IPEA Atlas da Violência (CVLI)",
+      "status": "partial",
+      "priority": 4,
+      "connector_name": "sinesp_cvli",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "PARTIAL",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T19:36:17.066286+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T193518Z",
+      "counts": {
+        "rows": 945
+      }
+    },
+    {
+      "source_id": "dou",
+      "source_name": "Diário Oficial da União",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "dou",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "DEGRADED",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cvm",
+      "source_name": "CVM Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "bacen",
+      "source_name": "Banco Central Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "bndes",
+      "source_name": "BNDES Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "perfis_enriquecidos",
+      "source_name": "Enriquecimento de perfis (Casas)",
+      "status": "partial",
+      "priority": 1,
+      "connector_name": "enrich_perfis",
+      "reliability": "OFFICIAL_DERIVED",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "HEALTHY",
+      "last_ingested_at": "2026-09-07T01:33:41.713148+00:00",
+      "last_run_ok": true,
+      "last_run_id": "20260907T012339Z",
+      "counts": {
+        "perfis": 80,
+        "fotos": 80
+      }
+    },
+    {
+      "source_id": "cnj_magistrate_compensation",
+      "source_name": "CNJ — Remuneração dos Magistrados",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "cnj_magistrate_compensation",
+      "reliability": "PRIMARY_OFFICIAL",
+      "coverage_start": "VARIABLE",
+      "coverage_end": "atual",
+      "coverage_status": "PARTIAL",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    },
+    {
+      "source_id": "dados_gov_br",
+      "source_name": "Portal Brasileiro de Dados Abertos",
+      "status": "registered",
+      "priority": 4,
+      "connector_name": null,
+      "reliability": "OFFICIAL_DERIVED",
+      "coverage_start": null,
+      "coverage_end": null,
+      "coverage_status": "UNKNOWN",
+      "health_status": "UNKNOWN",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "last_run_id": null,
+      "counts": {}
+    }
+  ],
+  "gold": {
+    "entidades": 224488,
+    "relacoes": 181296,
+    "documentos": 11828,
+    "bens_silver": 30000,
+    "contratos_silver": 2500,
+    "licitacoes": 1012
+  }
+}

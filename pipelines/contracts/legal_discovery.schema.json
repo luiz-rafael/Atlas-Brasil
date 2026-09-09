@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atlas.legal_case_discovery",
+  "title": "CASE_DISCOVERY + LEGAL_CASE (DataJud scoped)",
+  "description": "Processos entram só por descoberta documentada no escopo Atlas — não scrape nacional.",
+  "type": "object",
+  "required": ["process_number_normalized", "discovered_by_source", "discovery_type"],
+  "properties": {
+    "process_number_normalized": { "type": "string", "minLength": 20, "maxLength": 20 },
+    "discovered_by_source": { "type": "string" },
+    "discovered_by_entity_id": { "type": ["string", "null"] },
+    "discovery_type": {
+      "type": "string",
+      "enum": ["OFFICIAL_REFERENCE", "COMPANY_CONTEXT", "PERSON_CONTEXT", "KNOWN_REFRESH", "MANUAL"]
+    },
+    "discovery_reference": { "type": ["string", "null"] },
+    "ingest_decision": {
+      "type": "string",
+      "enum": ["PENDING", "INGEST", "IGNORE", "QUARANTINE"]
+    }
+  }
+}

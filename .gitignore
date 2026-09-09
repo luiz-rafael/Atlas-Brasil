@@ -1,0 +1,91 @@
+# --- Segredos (NUNCA commitar) ---
+.env
+.env.*
+!.env.example
+!**/.env.example
+!**/.env.*.example
+web/.env.local
+*.pem
+*.key
+secrets/
+credentials*
+
+# --- Documentação markdown (repo público = só código) ---
+*.md
+*.MD
+
+# scripts temporários de auditoria local
+_audit_tmp.py
+*_audit_tmp*.py
+
+# --- Dados pesados / lake / KB local ---
+# Mantém só a pasta (gitkeep) + mocks leves, se existirem
+data/*
+!data/.gitkeep
+!data/mocks/
+!data/mocks/**
+
+# dumps e artefatos locais fora de data/
+*.sqlite
+*.sqlite3
+*.db
+*.bak
+*.bak-manual
+*.zip
+*.7z
+*.parquet
+*.orc
+*.avro
+
+# GeoJSON bruto (gerado → web/src/lib/)
+**/brazil-states.geojson
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+
+# --- Node / Next.js ---
+node_modules/
+web/node_modules/
+web/.next/
+web/out/
+web/build/
+web/data/
+.npm
+.yarn/
+*.tsbuildinfo
+web/next-env.d.ts
+web/tsconfig.tsbuildinfo
+
+# --- Docker / runtime volumes locais ---
+logs/
+*.log
+tmp/
+.temp/
+
+# --- IDE / OS ---
+.cursor/
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# --- Airflow local ---
+airflow/logs/
+airflow/airflow.db
+
+# --- Observabilidade dumps ---
+observabilidade/**/data/

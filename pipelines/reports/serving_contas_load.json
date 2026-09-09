@@ -1,0 +1,104 @@
+{
+  "finished_at": "2026-09-08T21:21:44.946084+00:00",
+  "duration_s": 66.54,
+  "results": {
+    "budget_revenue": {
+      "status": "OK",
+      "read": 139,
+      "inserted": 139,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "budget_expenditure": {
+      "status": "OK",
+      "read": 139,
+      "inserted": 139,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "budget_execution": {
+      "status": "OK",
+      "read": 35574,
+      "inserted": 35574,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "fiscal_result": {
+      "status": "OK",
+      "read": 278,
+      "inserted": 278,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "public_debt": {
+      "status": "OK",
+      "read": 318,
+      "inserted": 318,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "debt_cost": {
+      "status": "OK",
+      "read": 349,
+      "inserted": 349,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "personnel": {
+      "status": "OK",
+      "read": 35000,
+      "inserted": 35000,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "tax_expenditure": {
+      "status": "OK",
+      "mode": "aggregate",
+      "read": 228401,
+      "inserted": 810,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0,
+      "aggregate_years": 10,
+      "beneficiaries": 800,
+      "top_per_year": 80
+    },
+    "tax_burden": {
+      "status": "OK",
+      "read": 9,
+      "inserted": 9,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "cno_works": {
+      "status": "OK",
+      "read": 10562,
+      "inserted": 10562,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "companies": {
+      "status": "OK",
+      "read": 500,
+      "inserted": 500,
+      "updated": 0,
+      "skipped": 0,
+      "quarantined": 0
+    },
+    "admin_tax_contencioso": {
+      "status": "OK",
+      "read": 271,
+      "written": 271
+    }
+  },
+  "disclaimer": "O Atlas não acusa. O Atlas documenta. Renúncia ≠ pagamento. Resultado fiscal canônico ≠ arrecadação RFB − despesa."
+}

@@ -1,0 +1,295 @@
+{
+  "gerado_em": "2026-09-06T21:05:46.085293+00:00",
+  "total_sources": 24,
+  "por_status": {
+    "active": 8,
+    "registered": 10,
+    "partial": 4,
+    "stub": 2
+  },
+  "sources": [
+    {
+      "source_id": "tse_ckan",
+      "source_name": "TSE Dados Abertos (CKAN)",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "tse_bulk",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "tse_bens",
+      "source_name": "TSE Bens de Candidatos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "tse_bens",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T20:38:02.733164+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "bytes": 5369508,
+        "csv": 29
+      }
+    },
+    {
+      "source_id": "tse_prestacao",
+      "source_name": "TSE Prestação de Contas",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "tse_prestacao",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T21:05:33.656399+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "arquivos": 1
+      }
+    },
+    {
+      "source_id": "tse_divulga",
+      "source_name": "TSE DivulgaCandContas",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "camara_v2",
+      "source_name": "Câmara dos Deputados Dados Abertos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "camara_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "camara_orgaos",
+      "source_name": "Câmara Órgãos / Frentes / Comissões",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "camara_orgaos",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T20:39:37.885719+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "orgaos": 500,
+        "frentes": 500,
+        "membros": 2995
+      }
+    },
+    {
+      "source_id": "senado_legis",
+      "source_name": "Senado Federal Dados Abertos",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "senado_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "rfb_cnpj",
+      "source_name": "Receita Federal CNPJ",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "cnpj_rfb",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T21:05:20.489626+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "files": 1
+      }
+    },
+    {
+      "source_id": "pncp",
+      "source_name": "Portal Nacional de Contratações Públicas",
+      "status": "active",
+      "priority": 1,
+      "connector_name": "pncp_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T21:05:27.548845+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "contratos": 150
+      }
+    },
+    {
+      "source_id": "compras_gov",
+      "source_name": "Compras.gov.br",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cgu_portal",
+      "source_name": "Portal da Transparência / CGU",
+      "status": "stub",
+      "priority": 2,
+      "connector_name": "cgu_portal",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T21:05:20.167726+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "stub": 1
+      }
+    },
+    {
+      "source_id": "transferegov",
+      "source_name": "Transferegov Dados Abertos",
+      "status": "active",
+      "priority": 2,
+      "connector_name": "transferegov_api",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T21:05:28.876209+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "registros": 50
+      }
+    },
+    {
+      "source_id": "tcu",
+      "source_name": "Tribunal de Contas da União",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "siconfi",
+      "source_name": "SICONFI / Tesouro Nacional",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cnj_datajud",
+      "source_name": "CNJ DataJud",
+      "status": "stub",
+      "priority": 4,
+      "connector_name": "datajud_cnj",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": "2026-09-06T20:48:41.548454+00:00",
+      "last_run_ok": true,
+      "counts": {
+        "stub": 1
+      }
+    },
+    {
+      "source_id": "stf",
+      "source_name": "Supremo Tribunal Federal",
+      "status": "partial",
+      "priority": 4,
+      "connector_name": "stf",
+      "reliability": "JUDICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "stj",
+      "source_name": "Superior Tribunal de Justiça",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "JUDICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "ibge",
+      "source_name": "IBGE Serviços de Dados",
+      "status": "registered",
+      "priority": 3,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "dou",
+      "source_name": "Diário Oficial da União",
+      "status": "partial",
+      "priority": 2,
+      "connector_name": "dou",
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "cvm",
+      "source_name": "CVM Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "bacen",
+      "source_name": "Banco Central Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "bndes",
+      "source_name": "BNDES Dados Abertos",
+      "status": "registered",
+      "priority": 5,
+      "connector_name": null,
+      "reliability": "PRIMARY_OFFICIAL",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "perfis_enriquecidos",
+      "source_name": "Enriquecimento de perfis (Casas)",
+      "status": "partial",
+      "priority": 1,
+      "connector_name": "enrich_perfis",
+      "reliability": "OFFICIAL_DERIVED",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    },
+    {
+      "source_id": "dados_gov_br",
+      "source_name": "Portal Brasileiro de Dados Abertos",
+      "status": "registered",
+      "priority": 4,
+      "connector_name": null,
+      "reliability": "OFFICIAL_DERIVED",
+      "last_ingested_at": null,
+      "last_run_ok": null,
+      "counts": {}
+    }
+  ]
+}

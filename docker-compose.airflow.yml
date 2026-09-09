@@ -1,0 +1,80 @@
+# Airflow LocalExecutor — profile: docker compose --profile airflow up -d
+# UI: http://localhost:8080  (atlas / atlasbrasil)
+
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.9.3-python3.11
+  environment: &airflow-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://atlas:atlasbrasil@postgres:5432/atlas_brasil
+    AIRFLOW__CORE__FERNET_KEY: "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY="
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+    AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+    ATLAS_ROOT: /opt/atlas
+    ATLAS_PYTHON: python
+    ATLAS_MINIO_ENABLED: "1"
+    ATLAS_MINIO_ENDPOINT: http://minio:9000
+    ATLAS_MINIO_ACCESS_KEY: atlasminio
+    ATLAS_MINIO_SECRET_KEY: atlasbrasilminio
+    ATLAS_MINIO_BUCKET: atlas-raw
+    DATABASE_URL: postgresql://atlas:atlasbrasil@postgres:5432/atlas_brasil
+    LAKE_PATH: /opt/atlas/data/lake
+    _PIP_ADDITIONAL_REQUIREMENTS: "boto3 psycopg[binary] httpx polars pyarrow py7zr pyyaml 'pyiceberg[pyarrow,sql-sqlite]' sqlalchemy"
+  volumes:
+    - ./:/opt/atlas
+    - ./airflow/dags:/opt/airflow/dags
+    - atlas_airflow_logs:/opt/airflow/logs
+  user: "50000:0"
+  depends_on:
+    postgres:
+      condition: service_healthy
+
+services:
+  airflow-init:
+    <<: *airflow-common
+    profiles: ["airflow"]
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username atlas \
+          --password atlasbrasil \
+          --firstname Atlas \
+          --lastname Brasil \
+          --role Admin \
+          --email atlas@local || true
+    restart: "no"
+
+  airflow-webserver:
+    <<: *airflow-common
+    profiles: ["airflow"]
+    container_name: atlas-airflow-webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+  airflow-scheduler:
+    <<: *airflow-common
+    profiles: ["airflow"]
+    container_name: atlas-airflow-scheduler
+    command: scheduler
+    restart: unless-stopped
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+
+volumes:
+  atlas_airflow_logs:

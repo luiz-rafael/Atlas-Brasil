@@ -1,0 +1,16 @@
+{
+  "fotos": {
+    "p_cam_74173": "https://www.camara.leg.br/internet/deputado/bandep/74173.jpg",
+    "p_cam_73892": "https://www.camara.leg.br/internet/deputado/bandep/73892.jpg",
+    "p_cam_74544": "https://www.camara.leg.br/internet/deputado/bandep/74544.jpg",
+    "p_cam_73552": "https://www.camara.leg.br/internet/deputado/bandep/73552.jpg",
+    "p_cam_160527": "https://www.camara.leg.br/internet/deputado/bandep/160527.jpg",
+    "p_cam_160541": "https://www.camara.leg.br/internet/deputado/bandep/160541.jpg",
+    "p_cam_107283": "https://www.camara.leg.br/internet/deputado/bandep/107283.jpg",
+    "p_sen_739": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador739.jpg",
+    "p_sen_35": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador35.jpg",
+    "p_sen_581": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador581.jpg",
+    "p_sen_70": "http://www.senado.leg.br/senadores/img/fotos-oficiais/senador70.jpg"
+  },
+  "note": "URLs Camara/Senado para nos do grafo BETA"
+}

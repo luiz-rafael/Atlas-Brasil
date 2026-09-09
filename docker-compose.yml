@@ -1,0 +1,224 @@
+# ATLAS BRASIL — stack completa Fases 1–4 (web; mobile fora)
+# docker compose up -d
+# OpenSearch :9200 | Redpanda :19092 | Prometheus :9090 | Grafana :3002
+
+services:
+  neo4j:
+    image: neo4j:5.26-community
+    container_name: atlas-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: neo4j/atlasbrasil
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+    volumes:
+      - atlas_neo4j_data:/data
+      - atlas_neo4j_logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: atlas-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: atlas
+      POSTGRES_PASSWORD: atlasbrasil
+      POSTGRES_DB: atlas_brasil
+    volumes:
+      - atlas_pg_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atlas -d atlas_brasil"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: atlas-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - atlas_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    image: minio/minio:latest
+    container_name: atlas-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: atlasminio
+      MINIO_ROOT_PASSWORD: atlasbrasilminio
+    volumes:
+      - atlas_minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 8
+
+  # --- FASE 2 ---
+  opensearch:
+    image: opensearchproject/opensearch:2.17.1
+    container_name: atlas-opensearch
+    environment:
+      - discovery.type=single-node
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - atlas_os_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9200/_cluster/health || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.17.1
+    container_name: atlas-os-dashboards
+    ports:
+      - "5601:5601"
+    environment:
+      - OPENSEARCH_HOSTS=["http://opensearch:9200"]
+      - DISABLE_SECURITY_DASHBOARDS_PLUGIN=true
+    depends_on:
+      opensearch:
+        condition: service_healthy
+
+  # Kafka-compatible (mais leve que Kafka+ZK)
+  redpanda:
+    image: redpandadata/redpanda:v24.2.4
+    container_name: atlas-redpanda
+    command:
+      - redpanda
+      - start
+      - --overprovisioned
+      - --smp=1
+      - --memory=512M
+      - --reserve-memory=0M
+      - --node-id=0
+      - --check=false
+      - --kafka-addr=internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr=internal://redpanda:9092,external://localhost:19092
+      - --pandaproxy-addr=internal://0.0.0.0:8082,external://0.0.0.0:18082
+      - --advertise-pandaproxy-addr=internal://redpanda:8082,external://localhost:18082
+    ports:
+      - "19092:19092"
+      - "18082:18082"
+    volumes:
+      - atlas_redpanda_data:/var/lib/redpanda/data
+    healthcheck:
+      test: ["CMD-SHELL", "rpk cluster health | grep -q 'Healthy'"]
+      interval: 15s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: atlas-api
+    ports:
+      # 8001 no host: evita conflito comum no Windows com outro processo em :8000
+      - "8001:8000"
+    environment:
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: atlasbrasil
+      DATABASE_URL: postgresql://atlas:atlasbrasil@postgres:5432/atlas_brasil
+      REDIS_URL: redis://redis:6379/0
+      OPENSEARCH_URL: http://opensearch:9200
+      KAFKA_BOOTSTRAP: redpanda:9092
+      KB_PATH: /data/atlas-brasil-kb-v2.json
+      LAKE_PATH: /lake
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    volumes:
+      - ./data:/data:ro
+      - ./data/lake:/lake
+      - ./api/app:/app/app:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles: ["full"]
+
+  # --- FASE 4 — observabilidade ---
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: atlas-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observabilidade/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - atlas_prom_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: atlas-grafana
+    ports:
+      - "3002:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: atlas
+      GF_SECURITY_ADMIN_PASSWORD: atlasbrasil
+      GF_USERS_DEFAULT_THEME: light
+      GF_SERVER_ROOT_URL: http://localhost:3002
+    volumes:
+      - atlas_grafana_data:/var/lib/grafana
+      - ./observabilidade/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
+# Airflow Fase A:
+# docker compose -f docker-compose.yml -f docker-compose.airflow.yml --profile airflow up -d
+# UI :8080 · atlas / atlasbrasil · ver airflow/README.md
+
+volumes:
+  atlas_neo4j_data:
+  atlas_neo4j_logs:
+  atlas_pg_data:
+  atlas_redis_data:
+  atlas_minio_data:
+  atlas_os_data:
+  atlas_redpanda_data:
+  atlas_prom_data:
+  atlas_grafana_data:

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "atlas://contracts/raw_record",
+  "title": "RAW Record ATLAS (imutável)",
+  "type": "object",
+  "required": [
+    "raw_record_id",
+    "source_id",
+    "retrieved_at",
+    "file_hash",
+    "ingestion_run_id",
+    "connector_version"
+  ],
+  "properties": {
+    "raw_record_id": { "type": "string" },
+    "source_id": { "type": "string" },
+    "dataset_id": { "type": ["string", "null"] },
+    "source_record_id": { "type": ["string", "null"] },
+    "retrieved_at": { "type": "string" },
+    "published_at": { "type": ["string", "null"] },
+    "updated_at": { "type": ["string", "null"] },
+    "source_url": { "type": ["string", "null"] },
+    "file_path": { "type": "string" },
+    "file_hash": {
+      "type": "string",
+      "description": "SHA-256 hex do conteúdo bruto"
+    },
+    "hash_algo": { "const": "sha256" },
+    "connector_version": { "type": "string" },
+    "ingestion_run_id": { "type": "string" },
+    "content_type": { "type": ["string", "null"] },
+    "byte_size": { "type": "integer" }
+  }
+}

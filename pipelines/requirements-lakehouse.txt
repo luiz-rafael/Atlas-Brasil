@@ -1,0 +1,8 @@
+# ATLAS lakehouse (Iceberg + Polars) — Fase 1 local / Fase 2 MinIO S3
+pyiceberg[pyarrow,sql-sqlite]>=0.7.0
+polars>=1.0.0
+pyarrow>=14.0.0
+sqlalchemy>=2.0.0
+pyyaml>=6.0
+boto3>=1.28.0
+# IO S3 via pyiceberg.io.pyarrow.PyArrowFileIO (não exige s3fs)

@@ -1,0 +1,1 @@
+"""Modelos canônicos do Atlas."""
