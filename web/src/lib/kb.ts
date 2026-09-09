@@ -94,7 +94,25 @@ export type KB = {
 
 let _kb: KB | null = null;
 
-function resolveKbPath(): string {
+function emptyKb(): KB {
+  return {
+    meta: {
+      versao: "empty",
+      _empty: true,
+      nota: "KB ausente no deploy — UI usa API/Postgres quando disponível.",
+    },
+    casos: [],
+    entidades: [],
+    registros_pessoa_caso: [],
+    relacoes: [],
+    timeline: [],
+    documentos: [],
+    dossies: {},
+    mapa_poder_2026: {},
+  };
+}
+
+function resolveKbPath(): string | null {
   const candidates = [
     process.env.ATLAS_KB_WEB_PATH,
     path.join(process.cwd(), "..", "data", "atlas-brasil-kb-web.json"),
@@ -103,15 +121,18 @@ function resolveKbPath(): string {
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
   }
-  throw new Error(
-    "KB web ausente — rode: python pipelines/load/export_kb_web.py"
-  );
+  return null;
 }
 
 /** KB em memória (fs) — só Server Components / Route Handlers. */
 export function getKB(): KB {
   if (!_kb) {
-    const raw = fs.readFileSync(resolveKbPath(), "utf8");
+    const kbPath = resolveKbPath();
+    if (!kbPath) {
+      _kb = emptyKb();
+      return _kb;
+    }
+    const raw = fs.readFileSync(kbPath, "utf8");
     _kb = JSON.parse(raw) as KB;
   }
   return _kb;
