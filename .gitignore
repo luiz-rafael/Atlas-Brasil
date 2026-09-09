@@ -64,6 +64,8 @@ web/.next/
 web/out/
 web/build/
 web/data/
+!web/data/mocks/
+!web/data/mocks/**
 .npm
 .yarn/
 *.tsbuildinfo
@@ -93,3 +95,5 @@ observabilidade/**/data/
 .neon
 .agents/
 skills-lock.json
+.vercel
+.env*
