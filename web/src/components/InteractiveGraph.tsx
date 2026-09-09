@@ -188,7 +188,7 @@ export default function InteractiveGraph({
             "text-margin-y": 10,
             "text-outline-width": 3,
             "text-outline-color": "#0c1212",
-            "text-max-width": 90,
+            "text-max-width": "90px",
             "text-wrap": "wrap",
             width: 42,
             height: 42,

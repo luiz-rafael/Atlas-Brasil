@@ -212,7 +212,7 @@ export function latestStatusByPerson(
   }
   const out: { person_id: string; latest: MockParticipation; history: MockParticipation[] }[] =
     [];
-  for (const [person_id, history] of by) {
+  for (const [person_id, history] of Array.from(by.entries())) {
     const sorted = [...history].sort((a, b) => {
       const ta = a.valid_from || "";
       const tb = b.valid_from || "";
@@ -309,7 +309,7 @@ export function buildInvestigacoesBetaGraph(
     if (!c.parent_id || !caseIds.has(c.id) || !caseIds.has(c.parent_id)) continue;
     addE(`e_split_${c.parent_id}_${c.id}`, c.parent_id, c.id, "desmembrou_em");
   }
-  for (const cid of caseIds) {
+  for (const cid of Array.from(caseIds)) {
     addE(`e_pf_${cid}`, "org_pf", cid, "realizou_diligencias");
     addE(`e_pgr_${cid}`, "org_pgr", cid, "promoveu_investigacao");
     addE(`e_stf_${cid}`, cid, "org_stf", "processado_por");
@@ -389,7 +389,7 @@ export function buildInvestigacoesBetaGraph(
     SUSPENDED: "suspenso_em",
   };
 
-  for (const p of latest.values()) {
+  for (const p of Array.from(latest.values())) {
     const person = mock.people.find((x) => x.id === p.person_id);
     if (!person) continue;
     const nodeId = person.atlas_id || person.id;

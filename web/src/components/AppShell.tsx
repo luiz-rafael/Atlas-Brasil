@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState, type ReactNode } from "react";
 import ModeToggle from "@/components/ModeToggle";
 
 /** Nav principal (§8 redesigner) — enxuta. */
-const PRIMARY_NAV = [
+const PRIMARY_NAV: { href: string; label: string; soft?: boolean }[] = [
   { href: "/explorar", label: "Explorar" },
   { href: "/pessoas", label: "Pessoas" },
   { href: "/empresas", label: "Empresas" },

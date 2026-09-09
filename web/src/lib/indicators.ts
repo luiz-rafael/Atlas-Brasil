@@ -199,7 +199,7 @@ export async function listYears(
   for (const o of loadFileDb().observations) {
     if (o.indicator_id === indicatorId) years.add(o.reference_year);
   }
-  return [...years].sort((a, b) => a - b);
+  return Array.from(years).sort((a, b) => a - b);
 }
 
 export async function observationsForYear(

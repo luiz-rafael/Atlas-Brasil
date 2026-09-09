@@ -90,3 +90,6 @@ airflow/airflow.db
 
 # --- Observabilidade dumps ---
 observabilidade/**/data/
+.neon
+.agents/
+skills-lock.json
