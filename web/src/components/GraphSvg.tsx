@@ -84,7 +84,6 @@ export default function GraphSvg({
 
   const ids = nodes.map((n) => n.id);
   const pos = layoutRadial(centro, ids);
-  const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
   const width = 640;
   const height = 440;
 

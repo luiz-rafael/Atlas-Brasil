@@ -192,7 +192,7 @@ export function eigenvectorCentrality(opts?: MetricsOpts, iters = 40) {
   const ids: string[] = [];
   nodes.forEach((_, id) => ids.push(id));
   if (!ids.length) return [];
-  let x = new Map<string, number>();
+  const x = new Map<string, number>();
   ids.forEach((id) => x.set(id, 1));
   for (let t = 0; t < iters; t++) {
     const y = new Map<string, number>();

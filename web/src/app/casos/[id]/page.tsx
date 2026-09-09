@@ -121,7 +121,7 @@ export default async function CasoPage({ params }: { params: { id: string } }) {
             >
               <span className="item-title">{r.pessoa_id}</span>
               <span className="item-meta">
-                {STATUS_LABEL[r.status] || r.status}
+                {(r.status && STATUS_LABEL[r.status]) || r.status || "—"}
               </span>
             </Link>
           ))}

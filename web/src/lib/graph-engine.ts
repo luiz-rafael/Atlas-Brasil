@@ -4,7 +4,7 @@
  */
 
 import "server-only";
-import { getKB, type Relacao, type Entidade, type Documento } from "./kb";
+import { getKB, type Entidade, type Documento } from "./kb";
 
 export type GraphNode = {
   id: string;

@@ -97,7 +97,7 @@ export default async function TerritorioPage({
     "ind_mortalidade_infantil",
     "ind_ideb_anos_finais",
   ];
-  const uniqueInds = [...new Set(requestInds)];
+  const uniqueInds = Array.from(new Set(requestInds));
 
   const popYears = await listYears("ind_pop_estimada");
   const years = popYears.length
@@ -460,7 +460,7 @@ export default async function TerritorioPage({
             Não é narrativa completa do estado.
           </p>
           <div className="atlas-territory-timeline">
-            {[...byDecade.entries()]
+             {Array.from(byDecade.entries())
               .sort((a, b) => b[0].localeCompare(a[0]))
               .map(([decade, events]) => (
               <div key={decade} className="atlas-territory-decade">
